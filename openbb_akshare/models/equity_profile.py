@@ -98,6 +98,33 @@ class AKShareEquityProfileData(EquityInfoData):
         description="The currency in which the asset is traded.", default=None
     )
 
+    @field_validator("name", mode="before", check_fields=False)
+    @classmethod
+    def validate_name(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("公司名称", mode="before", check_fields=False)
+    @classmethod
+    def validate_公司名称(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("org_id", mode="before", check_fields=False)
+    @classmethod
+    def validate_org_id(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
     @field_validator("actual_issue_vol", mode="before", check_fields=False)
     @classmethod
     def validate_actual_issue_vol(cls, v: Optional[int]) -> Optional[int]:
@@ -197,6 +224,24 @@ class AKShareEquityProfileData(EquityInfoData):
         else:
             return str(v)
 
+    @field_validator("公司简介", mode="before", check_fields=False)
+    @classmethod
+    def validate_公司简介(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("主要范围", mode="before", check_fields=False)
+    @classmethod
+    def validate_主要范围(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
     @field_validator("org_name_cn", mode="before", check_fields=False)
     @classmethod
     def validate_org_name_cn(cls, v: Optional[str]) -> Optional[str]:
@@ -265,9 +310,15 @@ class AKShareEquityProfileFetcher(
             """Get the data for one ticker symbol."""
             try:
                 result: dict = {}
-                result = fetch_equity_info(symbol, api_key=api_key, use_cache=use_cache).to_dict(orient="records")[0]
-                if result:
+                df = fetch_equity_info(symbol, api_key=api_key, use_cache=use_cache)
+                records = df.to_dict(orient="records")
+                if records:
+                    result = records[0]
                     results.append(result)
+                else:
+                    messages.append(
+                        f"No data available for symbol {symbol}"
+                    )
             except Exception as e:
                 messages.append(
                     f"Error getting data for {symbol} -> {e.__class__.__name__}: {e}"
