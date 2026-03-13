@@ -116,6 +116,96 @@ class AKShareEquityProfileData(EquityInfoData):
         else:
             return int(v)
 
+    @field_validator("ceo", mode="before", check_fields=False)
+    @classmethod
+    def validate_ceo(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("company_url", mode="before", check_fields=False)
+    @classmethod
+    def validate_company_url(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("business_address", mode="before", check_fields=False)
+    @classmethod
+    def validate_business_address(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("mailing_address", mode="before", check_fields=False)
+    @classmethod
+    def validate_mailing_address(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("business_phone_no", mode="before", check_fields=False)
+    @classmethod
+    def validate_business_phone_no(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("hq_address_postal_code", mode="before", check_fields=False)
+    @classmethod
+    def validate_hq_address_postal_code(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("hq_state", mode="before", check_fields=False)
+    @classmethod
+    def validate_hq_state(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("sector", mode="before", check_fields=False)
+    @classmethod
+    def validate_sector(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("industry_category", mode="before", check_fields=False)
+    @classmethod
+    def validate_industry_category(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
+    @field_validator("org_name_cn", mode="before", check_fields=False)
+    @classmethod
+    def validate_org_name_cn(cls, v: Optional[str]) -> Optional[str]:
+        """Return None if it is nan."""
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        else:
+            return str(v)
+
     @field_validator("established_date", mode="before", check_fields=False)
     @classmethod
     def validate_established_date(cls, v):
