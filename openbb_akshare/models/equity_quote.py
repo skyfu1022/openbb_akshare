@@ -2,21 +2,23 @@
 
 # pylint: disable=unused-argument
 
+import logging
 from typing import Any, Dict, List, Optional
 from warnings import warn
 
+from mysharelib.tools import normalize_symbol, setup_logger
 from openbb_core.provider.abstract.fetcher import Fetcher
 from openbb_core.provider.standard_models.equity_quote import (
     EquityQuoteData,
     EquityQuoteQueryParams,
 )
 from pydantic import Field
-import logging
-from mysharelib.tools import setup_logger, normalize_symbol
+
 from openbb_akshare import project_name
 
 setup_logger(project_name)
 logger = logging.getLogger(__name__)
+
 
 class AKShareEquityQuoteQueryParams(EquityQuoteQueryParams):
     """AKShare Equity Quote Query."""
@@ -35,7 +37,7 @@ class AKShareEquityQuoteData(EquityQuoteData):
     __alias_dict__ = {
         "symbol": "代码",
         "name": "名称",
-        "last_price": "最新价",
+        "last_price": "现价",
         "open": "今开",
         "high": "最高",
         "low": "最低",
@@ -47,8 +49,8 @@ class AKShareEquityQuoteData(EquityQuoteData):
         "amplitude": "振幅",
         "pe_ratio": "市盈率",
         "pb_ratio": "市净率",
-        "52_week_high": "52周最高",
-        "52_week_low": "52周最低",
+        "year_high": "52周最高",
+        "year_low": "52周最低",
         "float_shares": "流通股",
         "limit_down": "跌停",
         "float_market_value": "流通值",
@@ -61,7 +63,6 @@ class AKShareEquityQuoteData(EquityQuoteData):
         "funds_share_ratio": "基金份额/总股本",
         "goodwill_in_net_assets": "净资产中的商誉",
         "average_price": "均价",
-        "current_price": "现价",
         "ytd_change": "今年以来涨幅",
         "issue_date": "发行日期",
         "net_asset_to_market_cap": "资产净值/总市值",
@@ -127,14 +128,14 @@ class AKShareEquityQuoteFetcher(
                 return pd.DataFrame([{"symbol": symbol, "error": "Symbol not found"}])
             else:
                 data = stock_individual_spot_xq_df.set_index("item")
-                #logger.info(f"Fetched data for symbol: {data}")
+                # logger.info(f"Fetched data for symbol: {data}")
                 return data.T
 
         for symbol in symbols:
-            try:        
+            try:
                 data = get_one(symbol, api_key=api_key, use_cache=query.use_cache)
                 all_data.append(data.to_dict(orient="records")[0])
-                
+
             except Exception as e:
                 print(f"Error fetching data for symbol {symbol}: {e}")
                 continue
