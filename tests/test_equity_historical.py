@@ -39,3 +39,54 @@ def test_equity_info(symbol, akshare_api_key, logger):
 def test_equity_historical_with_date_format1(logger, default_provider):
     df = obb.equity.price.historical(symbol="600325", start_date="2024-01-01", end_date="2025-09-08", provider=default_provider).to_dataframe()
     assert isinstance(df, pd.DataFrame)
+
+
+@pytest.mark.parametrize("adjustment", [None, "qfq", "hfq"])
+@pytest.mark.parametrize("symbol", ["600036", "000001"])
+def test_equity_historical_adjustment_a股(symbol, adjustment, default_provider):
+    """测试A股复权数据获取"""
+    df = obb.equity.price.historical(
+        symbol=symbol,
+        provider=default_provider,
+        adjustment=adjustment,
+        use_cache=False
+    ).to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
+    assert "open" in df.columns
+    assert "close" in df.columns
+    assert "high" in df.columns
+    assert "low" in df.columns
+
+
+@pytest.mark.parametrize("adjustment", [None, "qfq", "hfq"])
+@pytest.mark.parametrize("symbol", ["00700.HK", "00300.HK"])
+def test_equity_historical_adjustment_h股(symbol, adjustment, default_provider):
+    """测试港股复权数据获取"""
+    df = obb.equity.price.historical(
+        symbol=symbol,
+        provider=default_provider,
+        adjustment=adjustment,
+        use_cache=False
+    ).to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
+
+
+def test_adjustment_data_difference(default_provider):
+    """验证复权数据与不复权数据存在差异"""
+    df_original = obb.equity.price.historical(
+        symbol="600036",
+        provider=default_provider,
+        adjustment=None,
+        use_cache=False
+    ).to_dataframe()
+    
+    df_qfq = obb.equity.price.historical(
+        symbol="600036",
+        provider=default_provider,
+        adjustment="qfq",
+        use_cache=False
+    ).to_dataframe()
+    
+    assert not df_original["close"].equals(df_qfq["close"])

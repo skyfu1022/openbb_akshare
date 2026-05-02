@@ -149,7 +149,10 @@ def ak_download(
 
     # Retrieve data from cache first
     symbol_b, symbol_f, market = normalize_symbol(symbol)
-    cache = TableCache(EQUITY_HISTORY_SCHEMA, project=project_name, table_name=f"{market}{symbol_b}", primary_key="date")
+    
+    # 根据复权类型构建缓存键
+    cache_suffix = f"_{adjust}" if adjust else ""
+    cache = TableCache(EQUITY_HISTORY_SCHEMA, project=project_name, table_name=f"{market}{symbol_b}{cache_suffix}", primary_key="date")
     
     if use_cache:
         check_cache(symbol=symbol_b, cache=cache, api_key=api_key, period=period)
@@ -160,7 +163,10 @@ def ak_download(
 
     # If not in cache, download data
     # Download data using AKShare
-    data_util_today_df = ak_download_without_cache(symbol_b, period=period, api_key=api_key, start_date=start_dt.strftime("%Y%m%d"), end_date=end_dt.strftime("%Y%m%d"))
+    data_util_today_df = ak_download_without_cache(symbol_b, period=period, api_key=api_key, 
+                                                   start_date=start_dt.strftime("%Y%m%d"), 
+                                                   end_date=end_dt.strftime("%Y%m%d"),
+                                                   adjust=adjust)
     cache.write_dataframe(data_util_today_df)
     
     return cache.fetch_date_range(start_dt.strftime("%Y-%m-%d"), end_dt.strftime("%Y-%m-%d"))
