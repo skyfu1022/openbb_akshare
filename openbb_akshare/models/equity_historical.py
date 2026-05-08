@@ -45,6 +45,11 @@ class AKShareEquityHistoricalQueryParams(EquityHistoricalQueryParams):
         description="Whether to use a cached request. The quote is cached for one hour.",
     )
 
+    adjustment: Optional[Literal["qfq", "hfq"]] = Field(
+        default=None,
+        description="Adjustment type for historical prices. 'qfq' for forward-adjusted (前复权), 'hfq' for backward-adjusted (后复权). None means no adjustment.",
+    )
+
 class AKShareEquityHistoricalData(EquityHistoricalData):
     """AKShare Equity Historical Price Data."""
 
@@ -104,6 +109,9 @@ class AKShareEquityHistoricalFetcher(
     ) -> List[Dict]:
         """Return the raw data from the AKShare endpoint."""
         from openbb_akshare.utils.helpers import ak_download
+        
+        adjust = query.adjustment if query.adjustment else ""
+        
         data = ak_download(
             symbol=query.symbol,
             start_date=query.start_date,
@@ -111,7 +119,7 @@ class AKShareEquityHistoricalFetcher(
             period="daily",
             use_cache=query.use_cache,
             api_key="",
-            adjust="",
+            adjust=adjust,
         )
 
         if data.empty:
