@@ -21,7 +21,12 @@ from openbb_akshare.models.price_performance import AKSharePricePerformanceFetch
 from openbb_akshare.models.business_analysis import AkshareBusinessAnalysisFetcher
 from openbb_akshare.models.etf_holdings import AkshareEtfHoldingsFetcher
 from openbb_akshare.models.etf_search import AKShareEtfSearchFetcher
+from openbb_akshare.models.etf_historical import AKShareEtfHistoricalFetcher
 from openbb_akshare.models.fund_holdings import AkshareFundHoldingsFetcher
+from openbb_akshare.models.index_constituents import AKShareIndexConstituentsFetcher
+from openbb_akshare.models.index_historical import AKShareIndexHistoricalFetcher
+from openbb_akshare.models.index_search import AKShareIndexSearchFetcher
+from openbb_akshare.models.index_snapshots import AKShareIndexSnapshotsFetcher
 
 # mypy: disable-error-code="list-item"
 
@@ -50,7 +55,12 @@ provider = Provider(
         "PricePerformance": AKSharePricePerformanceFetcher,
         "BusinessAnalysis": AkshareBusinessAnalysisFetcher,
         "EtfHoldings": AkshareEtfHoldingsFetcher,
+        "EtfHistorical": AKShareEtfHistoricalFetcher,
         "EtfSearch": AKShareEtfSearchFetcher,
         "FundHoldings": AkshareFundHoldingsFetcher,
+        "IndexConstituents": AKShareIndexConstituentsFetcher,
+        "IndexHistorical": AKShareIndexHistoricalFetcher,
+        "IndexSearch": AKShareIndexSearchFetcher,
+        "IndexSnapshots": AKShareIndexSnapshotsFetcher,
     }
 )
